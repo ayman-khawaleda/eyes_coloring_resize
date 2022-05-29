@@ -2,9 +2,10 @@ import decimal
 import cv2
 import mediapipe as mp
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 from Tool import EyeTool
-
+matplotlib.use("GTK4Agg")
 
 class ColoringEyeTool(EyeTool):
     mp_face_mesh = mp.solutions.face_mesh
@@ -25,6 +26,7 @@ class ColoringEyeTool(EyeTool):
         if "File" in kwargs:
             self.path = kwargs["File"]
             self.image = cv2.cvtColor(cv2.imread(self.path), cv2.COLOR_BGR2RGB)
+            self.orig = self.image.copy()
         results = self.faceMeshDetector.process(self.image)
 
         if not results.multi_face_landmarks:
