@@ -168,9 +168,10 @@ class ColoringEyeTool(EyeTool):
                 saturation[1] if type(saturation) in [tuple,list] else saturation
             )
             l_s[left_iris_mask == 255] = np.clip(l_s[left_iris_mask == 255], 0, 255)
-            warp = cv2.cvtColor(cv2.merge([temp, l_s, l_v]), cv2.COLOR_HSV2RGB)
+            temp = cv2.cvtColor(cv2.merge([temp, l_s, l_v]), cv2.COLOR_HSV2RGB)
             self.image[
                 self.__li_list[1][1] : self.__li_list[2][1],
                 self.__li_list[0][0] : self.__li_list[3][0],
                 :,
-            ] = warp
+            ] = temp
+    
