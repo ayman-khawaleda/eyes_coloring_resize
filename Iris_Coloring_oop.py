@@ -124,3 +124,39 @@ class ColoringEyeTool(EyeTool):
             right_th = cv2.bitwise_and(right_th, rellipse)
 
         return right_th, left_th
+
+    def __color_eye(self, color, saturation, right_iris_mask, left_iris_mask):
+
+        if self.__is_right_open:
+            # Right Eye Iris Processing
+            hsv_right_iris = cv2.cvtColor(self.right_iris, cv2.COLOR_RGB2HSV)
+            r_h, r_s, r_v = cv2.split(hsv_right_iris)
+            temp = r_h.copy()
+            temp[right_iris_mask == 255] = color[0] if type(color) in [tuple,list] else color
+            r_s[right_iris_mask == 255] += (
+                saturation[0] if type(saturation) in [tuple,list] else saturation
+            )
+            r_s[right_iris_mask == 255] = np.clip(r_s[right_iris_mask == 255], 0, 255)
+            temp = cv2.cvtColor(cv2.merge([temp, r_s, r_v]), cv2.COLOR_HSV2RGB)
+            self.image[
+                self.__ri_list[3][1] : self.__ri_list[1][1],
+                self.__ri_list[2][0] : self.__ri_list[0][0],
+                :,
+            ] = temp
+
+        if self.__is_left_open:
+            # Left Eye Iris Processing
+            hsv_left_iris = cv2.cvtColor(self.left_iris, cv2.COLOR_RGB2HSV)
+            l_h, l_s, l_v = cv2.split(hsv_left_iris)
+            temp = l_h.copy()
+            temp[left_iris_mask == 255] = color[1] if type(color) in [tuple,list] else color
+            l_s[left_iris_mask == 255] += (
+                saturation[1] if type(saturation) in [tuple,list] else saturation
+            )
+            l_s[left_iris_mask == 255] = np.clip(l_s[left_iris_mask == 255], 0, 255)
+            warp = cv2.cvtColor(cv2.merge([temp, l_s, l_v]), cv2.COLOR_HSV2RGB)
+            self.image[
+                self.__li_list[1][1] : self.__li_list[2][1],
+                self.__li_list[0][0] : self.__li_list[3][0],
+                :,
+            ] = warp
