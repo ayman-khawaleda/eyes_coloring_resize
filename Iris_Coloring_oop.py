@@ -175,3 +175,7 @@ class ColoringEyeTool(EyeTool):
                 :,
             ] = temp
     
+    def show_results(self,axis=1):
+        plt.imshow(np.concatenate((self.image, self.orig), axis=axis))
+        plt.show()
+
