@@ -1,5 +1,6 @@
 import mediapipe as mp
 from Iris_Coloring_oop import ColoringEyeTool as CET
+
 IMAGE_FILES = [
     r"Resources/man1.jpg",
     r"Resources/man2.jpg",
@@ -15,8 +16,8 @@ if __name__ == "__main__":
         max_num_faces=1,
         refine_landmarks=True,
         min_detection_confidence=0.5,
-    )
     for i,path in enumerate(IMAGE_FILES):
         cet = CET(path,face_mesh)
         cet.apply(color=(120,60),saturation=25)
         cet.show_results()
+
