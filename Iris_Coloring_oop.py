@@ -29,6 +29,20 @@ class ColoringEyeTool(EyeTool):
 
         if not results.multi_face_landmarks:
             raise Exception(f'No Faces Detected In Image With Path: "{self.path}".')
+        
+        self.__ri_list, self.__li_list = [], []
+
+        for face_landmarks in results.multi_face_landmarks:
+            self.__is_right_open, self.__is_left_open = self.__are_eyes_open(
+                face_landmarks
+            )
+            right_iris_mask, left_iris_mask = self.__extract_iris_mask(face_landmarks)
+            self.__color_eye(
+                color=color,
+                saturation=saturation,
+                right_iris_mask=right_iris_mask,
+                left_iris_mask=left_iris_mask,
+            )
 
     def __are_eyes_open(self, face_landmarks, dist: int = 15):
         right_min_p, right_max_p, left_min_p, left_max_p = (
