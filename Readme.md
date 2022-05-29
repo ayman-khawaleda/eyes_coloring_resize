@@ -11,3 +11,11 @@ ___
 * matplotlib: 3.5.1
 ___
 ## Results:
+
+### Color Eyes
+
+![man_NO](Results/man_no_c.png)
+![man_YES](Results/man_c.png)
+![woman_NO](Results/woman_no_c.png)
+![woman_YES](Results/woman_c.png)
+___
