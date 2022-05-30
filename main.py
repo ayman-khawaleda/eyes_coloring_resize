@@ -22,3 +22,4 @@ if __name__ == "__main__":
     for i, path in enumerate(IMAGE_FILES):
         ret = RET(path, face_detecation, face_mesh)
         ret.apply(size=1.1)
+        ret.show_result()

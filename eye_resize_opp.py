@@ -17,7 +17,7 @@ class ResizeEyeTool(EyeTool):
         self.image = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB)
         self.power = 1.25
         self.radius = (
-            30 if self.image.shape[0] < 1000 or self.image.shape[1] < 1000 else 120
+            50 if self.image.shape[0] < 1000 or self.image.shape[1] < 1000 else 160
         )
         self.orig = self.image.copy()
 
@@ -57,7 +57,7 @@ class ResizeEyeTool(EyeTool):
             self.__create_index_maps(h, w)
             self.__edit_area(right_eye,left_eye)
             self.__smothe_border(right_eye, left_eye)
-            self.__remaping(faceROI, right_eye, left_eye)
+            self.__remaping(faceROI, rect_start_point, rect_end_point)
             
     def __get_eyes_key_points(self, mesh, w, h):
         mp_face_mesh = mp.solutions.face_mesh
@@ -170,3 +170,7 @@ class ResizeEyeTool(EyeTool):
             rect_start_point[0] : rect_end_point[0],
             :,
         ] = warped
+    
+    def show_result(self,axis=1):
+        plt.imshow(np.concatenate((self.image, self.orig), axis=axis))
+        plt.show()
