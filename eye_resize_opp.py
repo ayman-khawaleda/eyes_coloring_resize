@@ -53,3 +53,43 @@ class ResizeEyeTool(EyeTool):
             ].copy()
             mesh_result = self.faceMeshDetector.process(faceROI)
             h, w, _ = faceROI.shape
+	
+    def __get_eyes_key_points(self, mesh, w, h):
+        mp_face_mesh = mp.solutions.face_mesh
+        right_eye_list, left_eye_list = [], []
+        for face_landmarks in mesh.multi_face_landmarks:
+            for tup in mp_face_mesh.FACEMESH_RIGHT_EYE:
+                sor_idx, tar_idx = tup
+                source = face_landmarks.landmark[sor_idx]
+                target = face_landmarks.landmark[tar_idx]
+                rel_source = (int(source.x * w), int(source.y * h))
+                rel_target = (int(target.x * w), int(target.y * h	))
+                right_eye_list.append(rel_source)
+                right_eye_list.append(rel_target)
+
+            for tup in mp_face_mesh.FACEMESH_LEFT_EYE:
+                sor_idx, tar_idx = tup
+                source = face_landmarks.landmark[sor_idx]
+                target = face_landmarks.landmark[tar_idx]
+                rel_source = (int(source.x * w), int(source.y * h))
+                rel_target = (int(target.x * w), int(target.y * h))
+                left_eye_list.append(rel_source)
+                left_eye_list.append(rel_target)
+            right_eye_list.sort(key=lambda x: x[1])
+            right_eye_minh, right_eye_maxh = right_eye_list[0], right_eye_list[-1]
+            right_eye_list.sort(key=lambda x: x[0])
+            right_eye_minw, right_eye_maxw = right_eye_list[0], right_eye_list[-1]
+            right_eye = (
+                (right_eye_minw[0] + right_eye_maxw[0]) // 2,
+                (right_eye_minh[1] + right_eye_maxh[1]) // 2,
+            )
+
+            left_eye_list.sort(key=lambda x: x[1])
+            left_eye_minh, left_eye_maxh = left_eye_list[0], left_eye_list[-1]
+            left_eye_list.sort(key=lambda x: x[0])
+            left_eye_minw, left_eye_maxw = left_eye_list[0], left_eye_list[-1]
+            left_eye = (
+                (left_eye_minw[0] + left_eye_maxw[0]) // 2,
+                (left_eye_minh[1] + left_eye_maxh[1]) // 2,
+            )
+            return right_eye, left_eye
