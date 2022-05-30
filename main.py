@@ -1,6 +1,5 @@
 import mediapipe as mp
-from Iris_Coloring_oop import ColoringEyeTool as CET
-
+from eye_resize_opp import ResizeEyeTool as RET
 IMAGE_FILES = [
     r"Resources/man1.jpg",
     r"Resources/man2.jpg",
@@ -22,6 +21,6 @@ if __name__ == "__main__":
         model_selection=1, min_detection_confidence=0.5
     )
     for i, path in enumerate(IMAGE_FILES):
-        cet = CET(path, face_mesh)
-        cet.apply(color=(120, 60), saturation=25)
-        cet.show_results()
+        ret = RET(path, face_detecation, face_mesh)
+        ret.apply(size=1.1)
+        ret.show_result()
