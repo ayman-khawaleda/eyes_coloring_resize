@@ -16,9 +16,14 @@ ___
 
 |![man_NO](Results/man_no_c.png)|![man_YES](Results/man_c.png)|
 |:-|:-|
+|Before|After|
 |![woman_NO](Results/woman_no_c.png)|![woman_YES](Results/woman_c.png)|
+|Before|After|
+
 ___
 ### Resize Eyes
 |![man_NO](Results/man_no_c.png)|![man_YES](Results/man_re.png)|
 |:-|:-|
+|Before|After|
 |![woman_NO](Results/woman_no_c.png)|![woman_YES](Results/woman_re.png)|
+|Before|After|
