@@ -57,6 +57,7 @@ class ResizeEyeTool(EyeTool):
             self.__create_index_maps(h, w)
             self.__edit_area(right_eye,left_eye)
             self.__smothe_border(right_eye, left_eye)
+            self.__remaping(faceROI, right_eye, left_eye)
             
     def __get_eyes_key_points(self, mesh, w, h):
         mp_face_mesh = mp.solutions.face_mesh
@@ -159,3 +160,13 @@ class ResizeEyeTool(EyeTool):
         self.__left_map_y[lUl[1] : rLl[1], lUl[0] : rLl[0]] = cv2.GaussianBlur(
             self.__left_map_y[lUl[1] : rLl[1], lUl[0] : rLl[0]].copy(), (k,k), sigmax
         )
+
+    def __remaping(self,faceROI,rect_start_point,rect_end_point):
+        warped = cv2.remap(faceROI, self.__right_map_x, self.__right_map_y, cv2.INTER_CUBIC)
+        warped = cv2.remap(warped, self.__left_map_x, self.__left_map_y, cv2.INTER_CUBIC)
+
+        self.image[
+            rect_start_point[1] : rect_end_point[1],
+            rect_start_point[0] : rect_end_point[0],
+            :,
+        ] = warped
