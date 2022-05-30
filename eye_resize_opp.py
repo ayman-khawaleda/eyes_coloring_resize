@@ -54,6 +54,9 @@ class ResizeEyeTool(EyeTool):
             mesh_result = self.faceMeshDetector.process(faceROI)
             h, w, _ = faceROI.shape
             eye_right,eye_left = self.__get_eyes_key_points(mesh_result,w,h)
+            self.__create_index_maps(h,w)
+            
+
 
     def __get_eyes_key_points(self, mesh, w, h):
         mp_face_mesh = mp.solutions.face_mesh
@@ -94,3 +97,8 @@ class ResizeEyeTool(EyeTool):
                 (left_eye_minh[1] + left_eye_maxh[1]) // 2,
             )
             return right_eye, left_eye
+    def __create_index_maps(self, h, w):
+        xs = np.arange(0, h, 1, dtype=np.float32)
+        ys = np.arange(0, w, 1, dtype=np.float32)
+        self.__right_map_x, self.__right_map_y = np.meshgrid(xs, ys)
+        self.__left_map_x, self.__left_map_y = np.meshgrid(xs, ys)
