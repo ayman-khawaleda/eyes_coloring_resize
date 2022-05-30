@@ -35,3 +35,21 @@ class ResizeEyeTool(EyeTool):
             self.radius = kwargs["Radius"]
         self.power = size
 
+        results = self.faceDetector.process(self.image)
+        rows, cols, _ = self.image.shape
+        if not results.detections:
+            raise Exception(f'No Faces Detected In Image With Path: "{self.path}".')
+
+        for detection in results.detections:
+            rbb = detection.location_data.relative_bounding_box
+            rect_start_point = self.normaliz_pixel(rbb.xmin, rbb.ymin, cols, rows)
+            rect_end_point = self.normaliz_pixel(
+                rbb.xmin + rbb.width, rbb.ymin + rbb.height, cols, rows
+            )
+            faceROI = self.image[
+                rect_start_point[1] : rect_end_point[1],
+                rect_start_point[0] : rect_end_point[0],
+                :,
+            ].copy()
+            mesh_result = self.faceMeshDetector.process(faceROI)
+            h, w, _ = faceROI.shape
