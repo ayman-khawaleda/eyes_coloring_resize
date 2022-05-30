@@ -53,10 +53,13 @@ class ResizeEyeTool(EyeTool):
             ].copy()
             mesh_result = self.faceMeshDetector.process(faceROI)
             h, w, _ = faceROI.shape
-            eye_right,eye_left = self.__get_eyes_key_points(mesh_result,w,h)
-            self.__create_index_maps(h,w)
-            
-
+            right_eye, left_eye = self.__get_eyes_key_points(mesh_result, w, h)
+            self.__create_index_maps(h, w)
+            self.__edit_area(right_eye,left_eye)
+            plt.imshow(np.concatenate((self.__right_map_x,self.__right_map_y),axis=1))
+            plt.figure()
+            plt.imshow(np.concatenate((self.__right_map_x,self.__right_map_y),axis=1))
+            plt.show()
 
     def __get_eyes_key_points(self, mesh, w, h):
         mp_face_mesh = mp.solutions.face_mesh
@@ -67,7 +70,7 @@ class ResizeEyeTool(EyeTool):
                 source = face_landmarks.landmark[sor_idx]
                 target = face_landmarks.landmark[tar_idx]
                 rel_source = (int(source.x * w), int(source.y * h))
-                rel_target = (int(target.x * w), int(target.y * h	))
+                rel_target = (int(target.x * w), int(target.y * h))
                 right_eye_list.append(rel_source)
                 right_eye_list.append(rel_target)
 
@@ -97,8 +100,43 @@ class ResizeEyeTool(EyeTool):
                 (left_eye_minh[1] + left_eye_maxh[1]) // 2,
             )
             return right_eye, left_eye
+
     def __create_index_maps(self, h, w):
         xs = np.arange(0, h, 1, dtype=np.float32)
         ys = np.arange(0, w, 1, dtype=np.float32)
         self.__right_map_x, self.__right_map_y = np.meshgrid(xs, ys)
         self.__left_map_x, self.__left_map_y = np.meshgrid(xs, ys)
+
+    def __edit_area(self, right_eye, left_eye):
+        for i in range(-self.radius, self.radius):
+            for j in range(-self.radius, self.radius):
+                if i**2 + j**2 > self.radius**2:
+                    continue
+                if i > 0:
+                    self.__right_map_y[right_eye[1] + i][right_eye[0] + j] = (
+                        right_eye[1] + (i / self.radius) ** self.power * self.radius
+                    )
+                    self.__left_map_y[left_eye[1] + i][left_eye[0] + j] = (
+                        left_eye[1] + (i / self.radius) ** self.power * self.radius
+                    )
+                if i < 0:
+                    self.__right_map_y[right_eye[1] + i][right_eye[0] + j] = (
+                        right_eye[1] - (-i / self.radius) ** self.power * self.radius
+                    )
+                    self.__left_map_y[left_eye[1] + i][left_eye[0] + j] = (
+                        left_eye[1] - (-i / self.radius) ** self.power * self.radius
+                    )
+                if j > 0:
+                    self.__right_map_x[right_eye[1] + i][right_eye[0] + j] = (
+                        right_eye[0] + (j / self.radius) ** self.power * self.radius
+                    )
+                    self.__left_map_x[left_eye[1] + i][left_eye[0] + j] = (
+                        left_eye[0] + (j / self.radius) ** self.power * self.radius
+                    )
+                if j < 0:
+                    self.__right_map_x[right_eye[1] + i][right_eye[0] + j] = (
+                        right_eye[0] - (-j / self.radius) ** self.power * self.radius
+                    )
+                    self.__left_map_x[left_eye[1] + i][left_eye[0] + j] = (
+                        left_eye[0] - (-j / self.radius) ** self.power * self.radius
+                    )
