@@ -56,11 +56,8 @@ class ResizeEyeTool(EyeTool):
             right_eye, left_eye = self.__get_eyes_key_points(mesh_result, w, h)
             self.__create_index_maps(h, w)
             self.__edit_area(right_eye,left_eye)
-            plt.imshow(np.concatenate((self.__right_map_x,self.__right_map_y),axis=1))
-            plt.figure()
-            plt.imshow(np.concatenate((self.__right_map_x,self.__right_map_y),axis=1))
-            plt.show()
-
+            self.__smothe_border(right_eye, left_eye)
+            
     def __get_eyes_key_points(self, mesh, w, h):
         mp_face_mesh = mp.solutions.face_mesh
         right_eye_list, left_eye_list = [], []
@@ -140,3 +137,25 @@ class ResizeEyeTool(EyeTool):
                     self.__left_map_x[left_eye[1] + i][left_eye[0] + j] = (
                         left_eye[0] - (-j / self.radius) ** self.power * self.radius
                     )
+    def __smothe_border(self,right_eye,left_eye, k=5, xspace=10, yspace=10, sigmax=0):
+        r = self.radius
+        yr, xr = right_eye
+        yl, xl = left_eye
+        lUr = [yr - r - yspace, xr - r - xspace]  # Left Upper Right Eye
+        rLr = [yr + r + yspace, xr + r + xspace]  # Right Lower Right Eye
+        lUl = [yl - r - yspace, xl - r - xspace]  # Left Upper Left Eye
+        rLl = [yl + r + yspace, xl + r + xspace]  # Right Lower Left  Eye
+        self.__right_map_x[lUr[1] : rLr[1], lUr[0] : rLr[0]] = cv2.GaussianBlur(
+            self.__right_map_x[lUr[1] : rLr[1], lUr[0] : rLr[0]].copy(), (k,k), sigmax
+        )
+
+        self.__right_map_y[lUr[1] : rLr[1], lUr[0] : rLr[0]] = cv2.GaussianBlur(
+            self.__right_map_y[lUr[1] : rLr[1], lUr[0] : rLr[0]].copy(), (k,k), sigmax
+        )
+
+        self.__left_map_x[lUl[1] : rLl[1], lUl[0] : rLl[0]] = cv2.GaussianBlur(
+            self.__left_map_x[lUl[1] : rLl[1], lUl[0] : rLl[0]].copy(), (k,k), sigmax
+        )
+        self.__left_map_y[lUl[1] : rLl[1], lUl[0] : rLl[0]] = cv2.GaussianBlur(
+            self.__left_map_y[lUl[1] : rLl[1], lUl[0] : rLl[0]].copy(), (k,k), sigmax
+        )
