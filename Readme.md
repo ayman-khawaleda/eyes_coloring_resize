@@ -14,13 +14,11 @@ ___
 
 ### Color Eyes
 
-![man_NO](Results/man_no_c.png)
-![man_YES](Results/man_c.png)
-![woman_NO](Results/woman_no_c.png)
-![woman_YES](Results/woman_c.png)
+|![man_NO](Results/man_no_c.png)|![man_YES](Results/man_c.png)|
+|:-|:-|
+|![woman_NO](Results/woman_no_c.png)|![woman_YES](Results/woman_c.png)|
 ___
 ### Resize Eyes
-![man_NO](Results/man_no_c.png)
-![man_YES](Results/man_re.png)
-![woman_NO](Results/woman_no_c.png)
-![woman_YES](Results/woman_re.png)
+|![man_NO](Results/man_no_c.png)|![man_YES](Results/man_re.png)|
+|:-|:-|
+|![woman_NO](Results/woman_no_c.png)|![woman_YES](Results/woman_re.png)|
