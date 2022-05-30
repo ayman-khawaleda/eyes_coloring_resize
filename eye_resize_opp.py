@@ -53,7 +53,8 @@ class ResizeEyeTool(EyeTool):
             ].copy()
             mesh_result = self.faceMeshDetector.process(faceROI)
             h, w, _ = faceROI.shape
-	
+            eye_right,eye_left = self.__get_eyes_key_points(mesh_result,w,h)
+
     def __get_eyes_key_points(self, mesh, w, h):
         mp_face_mesh = mp.solutions.face_mesh
         right_eye_list, left_eye_list = [], []
